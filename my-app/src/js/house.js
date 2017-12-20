@@ -6354,3 +6354,5 @@ const house_data = [
     }
   }
 ];
+
+export default house_data;

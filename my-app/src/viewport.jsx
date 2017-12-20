@@ -3,7 +3,13 @@ const FluxViewport = window.FluxViewport;
 
 class Viewport extends Component {
 
-  
+  componentDidMount() {
+    const viewport = new FluxViewport(document.getElementById('view'));
+    // set up default lighting for the viewport
+    viewport.setupDefaultLighting();
+    // set the viewport background to white
+    viewport.setClearColor(0xffffff);
+  }
 
   render() {
     return (
