@@ -16,6 +16,7 @@ class DropdownMenu extends Component {
     this.setState({
       selected: project.name
     })
+    this.props.selectedProject(project.id);
   }
 
   componentWillMount() {
@@ -29,7 +30,6 @@ class DropdownMenu extends Component {
           {this.state.projects.map(project => {
             return <Dropdown.Item text={project.name} key={project.id} 
             onClick={() => this.makeSelection.bind(this)(project)}
-            onClick={() => this.props.selectedProject(project.id)}
              />
           })}
         </Dropdown.Menu>

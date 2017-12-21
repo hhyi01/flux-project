@@ -17,7 +17,6 @@ class Viewport extends Component {
   }
 
   selectedProject(projectId) {
-    console.log(projectId)
     this.setState({
       project: projectId
     })
@@ -39,10 +38,9 @@ class Viewport extends Component {
         <HeaderFloating />
           <div style={{float: 'right'}}>
             <DropdownMenu selectedProject={this.selectedProject} />
-            {console.log(this.state.projectId)}
           </div>
           <div style={{textAlign: 'center'}}>
-            <DropdownCell />
+            <DropdownCell projectId={this.state.project} />
           </div>
           <div id='content'>
             <div className='column'>

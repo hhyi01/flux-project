@@ -7,42 +7,50 @@ class DropdownCell extends Component {
     super(props);
     this.state = {
       selectedCell: 'Please select cell',
-      projectId: this.props.projectId,
-      dataTables: {}
+      dataTables: {},
+      projectCells: []
     }
+    this.selectCell = this.selectCell.bind(this);
+    this.getDataTable = this.getDataTable.bind(this);
+    this.getCells = this.getCells.bind(this);
+    this.fetchCells = this.fetchCells.bind(this);
   }
 
-  getProjects() {
-    return helpers.getUser().listProjects().then(data => this.setState({projects: data.entities}));
-  }
-
-  makeSelection(projectName) {
+  selectCell(cell) {
     this.setState({
-      selected: projectName
+      selectedCell: cell
     })
   }
 
-  // getDataTable(project) {
-  //   if (!(project.id in this.state.dataTables)) {
-  //     const dt = helpers.getUser().getDataTable(project.id);
-  //     this.setState({ dataTables[project.id]: { table: dt, handlers: {}, websocketOpen: false } })
-  //   }
-  //   return this.state.dataTables[project.id];
-  // }
+  getDataTable() {
+    const projectId = this.props.projectId;
+    if (!(projectId in this.state.dataTables)) {
+      const dt = helpers.getUser().getDataTable(projectId);
+      let selectedProject = Object.assign({}, this.state.dataTables);
+      selectedProject[projectId] = { table: dt, handlers: {}, websocketOpen: false };
+      this.setState({ dataTables: selectedProject }); 
+    }
+    return this.state.dataTables[projectId];
+  }
 
-  // getCells(project) {
-  //   return helpers.getDataTable(project).table.listCells().then(cells => console.log(cells)));
-  // }
+  getCells() {
+    const projectId = this.props.projectId;
+    this.getDataTable();
+    // let cells = this.state.dataTables[projectId].table.getCell();
+    console.log(this.state.dataTables[projectId])
+    // this.setState({projectCells: cells})
+  }
 
-  componentWillMount() {
-    this.getProjects();
+  fetchCells() {
+    const projectId = this.props.projectId;
+    return helpers.getCells(projectId);
   }
 
   render() {
     return (
       <Dropdown text={this.state.selectedCell}>
-        <Dropdown.Menu>
-          <Dropdown.Item text='nothing yet' />
+        <Dropdown.Menu onClick={this.getCells}>
+          <Dropdown.Item text='Cells' />
         </Dropdown.Menu>
       </Dropdown>
     )
