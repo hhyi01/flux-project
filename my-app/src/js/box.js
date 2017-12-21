@@ -17,3 +17,5 @@ var box_data = [
     }
   }
 ]
+
+export default box_data;

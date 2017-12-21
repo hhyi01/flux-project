@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
+import Viewport from './Viewport';
 import helpers from './js/helpers';
-import Viewport from './viewport';
 
 class Login extends Component {
   constructor(props) {
@@ -9,19 +9,18 @@ class Login extends Component {
       loggedIn: helpers.isLoggedIn()
     }
     this.handleClick = this.handleClick.bind(this);
-    this.initialize = this.initialize.bind(this);
   }
 
   handleClick() {
     helpers.logout();
     helpers.redirectToFluxLogin();
+    this.setState({
+      loggedIn: helpers.isLoggedIn().then(result => result)
+    });
   }
 
-  initialize() {
-    helpers.storeFluxUser();
-    this.setState({
-      loggedIn: helpers.isLoggedIn()
-    });
+  componentDidMount() {
+    return helpers.storeFluxUser();
   }
 
   render() {
@@ -33,7 +32,7 @@ class Login extends Component {
               <div className='button' onClick={this.handleClick}>Login</div>
             </div>
           ) : (
-            <div onChange={this.initialize}>
+            <div>
               <Viewport />
             </div>
           )

@@ -1,33 +1,54 @@
 import React, { Component } from 'react';
+import HeaderFloating from './Header';
+import box_data from './js/box.js';
+import DropdownMenu from './Dropdown';
+import DropdownCell from './DropdownCell';
 const FluxViewport = window.FluxViewport;
+let viewport;
 
 class Viewport extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      data: box_data,
+      project: ''
+    } 
+    this.selectedProject = this.selectedProject.bind(this);
+  }
+
+  selectedProject(projectId) {
+    console.log(projectId)
+    this.setState({
+      project: projectId
+    })
+  }
 
   componentDidMount() {
-    const viewport = new FluxViewport(document.getElementById('view'));
-    // set up default lighting for the viewport
-    viewport.setupDefaultLighting();
-    // set the viewport background to white
-    viewport.setClearColor(0xffffff);
+    // attach the viewport to the #div view
+    viewport = new FluxViewport(document.getElementById('view'));
+    viewport.setSize(800, 700);
+    viewport.setClearColor(0xffffff)
+    if(FluxViewport.isKnownGeom(this.state.data)) {
+      viewport.setGeometryEntity(this.state.data);
+    }
   }
 
   render() {
     return (
       <div>
-        <div id='header'>
-          <div id='title'>
-            <h1>FLUX</h1>
-            <h2>Seed Project</h2>
+        <HeaderFloating />
+          <div style={{float: 'right'}}>
+            <DropdownMenu selectedProject={this.selectedProject} />
+            {console.log(this.state.projectId)}
           </div>
-          <div id='actions'>
-            <div id='logout'>logout</div>
+          <div style={{textAlign: 'center'}}>
+            <DropdownCell />
           </div>
-        </div>
           <div id='content'>
             <div className='column'>
               <div id='output'>
                 <div className='label'>From Flux</div>
-                <div id='geometry'>
+                <div id='geometry' style={{display: 'flex'}}>
                   <div id='view'></div>
                 </div>
               </div>

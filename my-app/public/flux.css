@@ -4,7 +4,7 @@ html {
   height: 100%;
 }
 
-body {
+/*body {
   height: 100%;
   position: relative;
   margin: 0px;
@@ -22,7 +22,7 @@ body {
   justify-content: center;
   -webkit-box-align: center;
   -webkit-box-pack: center;
-}
+}*/
 
 #container {
   display: flex;
