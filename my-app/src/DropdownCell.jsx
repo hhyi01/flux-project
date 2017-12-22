@@ -7,18 +7,22 @@ class DropdownCell extends Component {
     super(props);
     this.state = {
       selectedCell: 'Please select cell',
+      cellId: '',
       dataTables: {},
-      projectCells: []
+      projectCells: [],
+      projectData: ''
     }
     this.selectCell = this.selectCell.bind(this);
     this.getDataTable = this.getDataTable.bind(this);
     this.getCells = this.getCells.bind(this);
     this.fetchCells = this.fetchCells.bind(this);
+    this.getValue = this.getValue.bind(this);
   }
 
   selectCell(cell) {
     this.setState({
-      selectedCell: cell
+      selectedCell: cell.label,
+      cellId: cell.id
     })
   }
 
@@ -35,10 +39,8 @@ class DropdownCell extends Component {
 
   getCells() {
     const projectId = this.props.projectId;
-    this.getDataTable();
-    // let cells = this.state.dataTables[projectId].table.getCell();
-    console.log(this.state.dataTables[projectId])
-    // this.setState({projectCells: cells})
+    this.state.dataTables[projectId].table.listCells()
+    .then(cells => this.setState({projectCells: cells.entities }))
   }
 
   fetchCells() {
@@ -46,11 +48,39 @@ class DropdownCell extends Component {
     return helpers.getCells(projectId);
   }
 
+  getValue() {
+    const projectId = this.props.projectId;
+    const cellId = this.state.cellId;
+    return this.state.dataTables[projectId].table.getCell(cellId).fetch();
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    this.getDataTable();
+    const projectId = this.props.projectId;
+    if(!this.state.dataTables[projectId]) {
+      setTimeout(() => {
+        this.getCells();
+      }, 1000);
+    }
+    if(prevState.cellId !== this.state.cellId) {
+      this.getValue().then(data => {
+        this.setState({ projectData: data.value })
+      });
+    }
+    if(JSON.stringify(prevState.projectData) !== JSON.stringify(this.state.projectData)) {
+      this.props.getProjectData(this.state.projectData);
+    }
+  }
+
   render() {
     return (
       <Dropdown text={this.state.selectedCell}>
-        <Dropdown.Menu onClick={this.getCells}>
-          <Dropdown.Item text='Cells' />
+        <Dropdown.Menu>
+          {this.state.projectCells.map(cell => {
+            return <Dropdown.Item text={cell.label} key={cell.id} 
+            onClick={() => (this.selectCell(cell))}
+            />
+          })}
         </Dropdown.Menu>
       </Dropdown>
     )

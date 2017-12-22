@@ -14,6 +14,7 @@ class Viewport extends Component {
       project: ''
     } 
     this.selectedProject = this.selectedProject.bind(this);
+    this.getProjectData = this.getProjectData.bind(this);
   }
 
   selectedProject(projectId) {
@@ -22,8 +23,13 @@ class Viewport extends Component {
     })
   }
 
-  componentDidMount() {
-    // attach the viewport to the #div view
+  getProjectData(projectData) {
+    this.setState({
+      data: projectData
+    })
+  }
+
+  componentDidUpdate() {
     viewport = new FluxViewport(document.getElementById('view'));
     viewport.setSize(800, 700);
     viewport.setClearColor(0xffffff)
@@ -40,7 +46,7 @@ class Viewport extends Component {
             <DropdownMenu selectedProject={this.selectedProject} />
           </div>
           <div style={{textAlign: 'center'}}>
-            <DropdownCell projectId={this.state.project} />
+            <DropdownCell projectId={this.state.project} getProjectData={this.getProjectData}/>
           </div>
           <div id='content'>
             <div className='column'>
