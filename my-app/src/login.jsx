@@ -9,6 +9,7 @@ class Login extends Component {
       loggedIn: helpers.isLoggedIn()
     }
     this.handleClick = this.handleClick.bind(this);
+    this.loggingOut = this.loggingOut.bind(this);
   }
 
   handleClick() {
@@ -17,6 +18,16 @@ class Login extends Component {
     this.setState({
       loggedIn: helpers.isLoggedIn().then(result => result)
     });
+  }
+
+  loggingOut(logout) {
+    if (logout) {
+      // helpers.logout();
+      console.log('clicked logout');
+    }
+    // this.setState({
+    //   loggedIn: !this.state.loggedIn
+    // })
   }
 
   componentDidMount() {
@@ -33,7 +44,7 @@ class Login extends Component {
             </div>
           ) : (
             <div>
-              <Viewport />
+              <Viewport loggingOut={this.loggingOut} />
             </div>
           )
         }

@@ -11,10 +11,14 @@ class Viewport extends Component {
     super(props);
     this.state = {
       data: box_data,
-      project: ''
+      project: '',
+      width: 700,
+      height: 500
     } 
     this.selectedProject = this.selectedProject.bind(this);
     this.getProjectData = this.getProjectData.bind(this);
+    this.updateDimensions = this.updateDimensions.bind(this);
+    this.loggedOut = this.loggedOut.bind(this);
   }
 
   selectedProject(projectId) {
@@ -29,9 +33,23 @@ class Viewport extends Component {
     })
   }
 
+  updateDimensions() {
+    this.setState({
+      width: document.body.clientWidth,
+      height: document.body.clientHeight
+    })
+  }
+
+  loggedOut(logout) {
+    this.props.loggingOut(logout);
+  }
+
   componentDidUpdate() {
+    if (document.body.clientWidth !== this.state.width || document.body.clientHeight !== this.state.height) {
+      this.updateDimensions();
+    }
     viewport = new FluxViewport(document.getElementById('view'));
-    viewport.setSize(800, 700);
+    viewport.setSize(this.state.width, this.state.height);
     viewport.setClearColor(0xffffff)
     if(FluxViewport.isKnownGeom(this.state.data)) {
       viewport.setGeometryEntity(this.state.data);
@@ -41,8 +59,8 @@ class Viewport extends Component {
   render() {
     return (
       <div>
-        <HeaderFloating />
-          <div style={{float: 'right'}}>
+        <HeaderFloating loggedOut={this.loggedOut} />
+          <div style={{float: 'right', paddingRight: '30px'}}>
             <DropdownMenu selectedProject={this.selectedProject} />
           </div>
           <div style={{textAlign: 'center'}}>
